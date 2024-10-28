@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ost.AccountController">
+    
+    <!-- Sign Up Tab -->
+    <Tab text="Sign Up">
+        <AnchorPane>
+            <VBox spacing="10">
+                <padding>
+                    <Insets topRightBottomLeft="20"/>
+                </padding>
+                <Label text="Create an Account"/>
+                <TextField fx:id="tfSignUpEmail" promptText="Email"/>
+                <PasswordField fx:id="pfSignUpPassword" promptText="Password"/>
+                <PasswordField fx:id="pfSignUpConfirmPassword" promptText="Confirm Password"/>
+                <Button fx:id="btSignUp" text="Sign Up" onAction="#onSignUp"/>
+                <Label fx:id="lbSignUpMessage" text="Create Account"/>
+            </VBox>
+        </AnchorPane>
+    </Tab>
+
+    <!-- Login Tab -->
+    <Tab text="Log In" disable="false">
+        <AnchorPane>
+            <VBox spacing="10">
+                <padding>
+                    <Insets topRightBottomLeft="20"/>
+                </padding>
+                <Label text="Log in to your account"/>
+                <TextField fx:id="tfUsername" promptText="Email"/>
+                <PasswordField fx:id="pfLoginPassword" promptText="Password"/>
+                <Button fx:id="btLogin" text="Log In" onAction="#onLogin"/>
+                <Label fx:id="lbLoginMessage" text="Login with your account"/>
+            </VBox>
+        </AnchorPane>
+    </Tab>
+
+    <!-- Logged In Tab (Disabled initially) -->
+    <Tab text="Welcome" disable="true">
+        <AnchorPane>
+            <VBox spacing="10">
+                <padding>
+                    <Insets topRightBottomLeft="20"/>
+                </padding>
+                <Label text="Welcome to your account!"/>
+                <Button fx:id="btLogout" text="Log Out" onAction="#onLogout"/>
+            </VBox>
+        </AnchorPane>
+    </Tab>
+    
+</TabPane>
