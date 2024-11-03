@@ -54,7 +54,13 @@
                 </padding>
                 <Label text="Welcome to your account!"/>
                 <Button fx:id="btLogout" text="Log Out" onAction="#onLogout"/>
-            </VBox>
+                <Label text="Change Password"/>
+                <PasswordField fx:id="pfOldPassword" promptText="Current Password"/>
+                <PasswordField fx:id="pfNewPassword" promptText="New Password"/>
+                <PasswordField fx:id="pfConfirmNewPassword" promptText="Confirm New Password"/>
+                <Button text="Change Password" onAction="#onChangePassword"/>
+                <Label fx:id="lbChangePasswordMessage" text="Change your password"/>
+                </VBox>
         </AnchorPane>
     </Tab>
     

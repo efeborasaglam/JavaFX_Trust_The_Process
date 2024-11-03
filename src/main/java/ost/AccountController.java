@@ -46,6 +46,18 @@ public class AccountController {
 
     @FXML
     private TextField tfUsername;
+
+    @FXML
+    private PasswordField pfOldPassword;
+
+    @FXML
+    private PasswordField pfNewPassword;
+
+    @FXML
+    private PasswordField pfConfirmNewPassword;
+
+    @FXML
+    private Label lbChangePasswordMessage;
  
     @FXML
     private void initialize() throws Exception {
@@ -166,4 +178,18 @@ public class AccountController {
         pfSignUpConfirmPassword.setText("");
         lbSignUpMessage.setText("Create Account");
     }
+
+    @FXML
+    private void onChangePassword(ActionEvent event) {
+    String email = tfUsername.getText();
+    String oldPassword = pfOldPassword.getText();
+    String newPassword = pfNewPassword.getText();
+    String confirmNewPassword = pfConfirmNewPassword.getText();
+
+    if (account.changePassword(email, oldPassword, newPassword, confirmNewPassword)) {
+        lbChangePasswordMessage.setText("Passwort erfolgreich geändert.");
+    } else {
+        lbChangePasswordMessage.setText("Passwort konnte nicht geändert werden.");
+    }
+}
 }

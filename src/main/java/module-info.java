@@ -5,6 +5,7 @@ module ost {
     requires java.sql;
     requires jbcrypt;
 
-    opens ost to javafx.fxml;
     exports ost;
+
+    opens ost to javafx.fxml;
 }

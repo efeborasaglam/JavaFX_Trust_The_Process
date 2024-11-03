@@ -124,16 +124,80 @@ public class Account extends DatabaseAPI {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
+            
             if (rs.next()) {
-                System.out.println("Benutzer in Users gefunden. Passwort abgerufen.");
-                return true;
+                String storedHashedPassword = rs.getString("password");
+                // Compare entered password (with pepper) with stored hashed password
+                return BCrypt.checkpw(password + PEPPER, storedHashedPassword);
             } else {
-                System.out.println("Kein Benutzer mit dieser E-Mail in Users gefunden.");
+                System.out.println("No user found with this email.");
             }
         } catch (SQLException e) {
-            System.out.println("Fehler bei der Datenbankabfrage in verifyPassword (ohne JOIN): " + e.getMessage());
+            System.out.println("Database error in verifyPassword: " + e.getMessage());
         }
         return false;
     }
+    
+    public boolean changePassword(String email, String oldPassword, String newPassword, String confirmNewPassword) {
+        // Prüfen, ob das neue Passwort und die Bestätigung übereinstimmen
+        if (!newPassword.equals(confirmNewPassword)) {
+            System.out.println("Das neue Passwort und die Bestätigung stimmen nicht überein.");
+            return false;
+        }
+    
+        // Stärke des neuen Passworts überprüfen (optional)
+        if (!isPasswordStrong(newPassword)) {
+            System.out.println("Das neue Passwort ist zu schwach.");
+            return false;
+        }
+    
+        String sql = "SELECT password FROM Users WHERE email = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                String storedHashedPassword = rs.getString("password");
+                // Altes Passwort prüfen
+                if (BCrypt.checkpw(oldPassword + PEPPER, storedHashedPassword)) {
+                    // Neues Passwort hashen und speichern
+                    String newHashedPassword = hashPassword(newPassword + PEPPER);
+                    
+                    String updateSql = "UPDATE Users SET password = ? WHERE email = ?";
+                    try (PreparedStatement updatePstmt = conn.prepareStatement(updateSql)) {
+                        updatePstmt.setString(1, newHashedPassword);
+                        updatePstmt.setString(2, email);
+                        updatePstmt.executeUpdate();
+                        System.out.println("Passwort erfolgreich geändert.");
+                        return true;
+                    }
+                } else {
+                    System.out.println("Das alte Passwort ist falsch.");
+                    return false;
+                }
+            } else {
+                System.out.println("Benutzer nicht gefunden.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Fehler beim Ändern des Passworts: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private boolean isPasswordStrong(String password) {
+        // Beispiel: Mindestlänge und Anforderung von Zahlen und Sonderzeichen
+        if (password.length() < 8) {
+            return false;
+        }
+        if (!password.matches(".*\\d.*")) { // enthält mindestens eine Zahl
+            return false;
+        }
+        if (!password.matches(".*[!@#$%^&*()].*")) { // enthält mindestens ein Sonderzeichen
+            return false;
+        }
+        return true;
+    }
+    
     
 }
